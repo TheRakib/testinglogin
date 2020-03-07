@@ -9,17 +9,15 @@ app.use(express.urlencoded({extended:true}))
 
 app.set("view engine", "ejs");
 
-app.get("/", (req, res)=>{
-    res.send("it's working");
-})
+
 app.use(user);
 
-const option = {
+const options = {
       useUnifiedTopology: true, 
     useNewUrlParser: true,
     useCreateIndex: true
 }
 const port = process.env.PORT || 8002;
-mongoose.connect(config.databaseURL, option).then(()=>{
+mongoose.connect(config.databaseURL, options).then(()=>{
     app.listen(port);
 })
