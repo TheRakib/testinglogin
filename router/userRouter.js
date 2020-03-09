@@ -81,10 +81,12 @@ router.route("/login")
     })
 
 
-router.get("/products", verifyToken , (req, res)=>{
 
-res.send("You have authorisation");
+
+router.get("/logout", (req, res)=>{
+        res.clearCookie("jsonwebtoken").redirect("/login")
 })
+
 
 
 module.exports = router;

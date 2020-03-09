@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const config = require("./config/config");
 const userRouter = require("./router/userRouter");
+const productRouter = require("./router/productRouter")
 const cookieParser = require("cookie-parser");
 
 
@@ -18,6 +19,7 @@ app.set("view engine", "ejs");
 
 
 app.use(userRouter);
+app.use(productRouter)
 
 const options = {
       useUnifiedTopology: true, 
