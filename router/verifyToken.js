@@ -1,23 +1,23 @@
 const jwt = require("jsonwebtoken");
 
+module.exports = (req, res, next)=>{
 
-module.exports = (req, res, next)=> {
 
-const token = req.cookies.jsonwebtoken;
-console.log(token);
-if(!token) return res.redirect("/signin")
-
-try{
-    const verified = jwt.verify(token, "privatekey");
-    console.log(verified)
-    req.user = verified;
-    console.log(req.user._id)
+       const token = req.cookies.jsonwebtoken;
+       console.log( "token" , token);
+  if(token) {
+      //decode token och user info
+    const user = jwt.verify(token, "secretkey")
+    console.log("user info" , user);
+    req.user = user;
     next();
+  }
+  else{
+     res.send("You are not authorised")
+  }
 }
-catch(err)
-{
-    res.send("invalid error")
-}
-
-
-}
+//req.cookies.jsonwebtoken
+  // kollar om användare har cookies 
+  // jwt verifiering metod  för att kolla om det är en valid cookies
+  // validerings data till server 
+  // next()

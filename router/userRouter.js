@@ -2,17 +2,14 @@ const express = require("express");
 const User = require("../model/user")
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
-
-const verify = require("./verifyToken")
+const verifyToken = require("./verifyToken")
 
 
 const router = express.Router();
 
 
 
-router.get("/", verify, (req, res) => {
-    res.send("hej, du lyckades att registrera i")
-})
+
 
 router.get("/signUp", (req, res) => {
     res.render("signup.ejs")
@@ -36,42 +33,57 @@ router.post("/signUp", async (req, res) => {
 
 
 
-router.get("/login", (req, res) => {
+router.route("/login")
+
+    .get((req, res) => {
 
 
 
-    //användarens info
-    res.render("login.ejs")
-    // jämföra med databas info.
+        //användarens info
+        res.render("login.ejs")
+        // jämföra med databas info.
 
 
 
-})
+    })
 
 
 
-router.post("/login", async (req, res) => {
-    const user = await User.findOne({ email: req.body.loginEmail });
-    if (!user) return res.redirect("/signup")
+    .post(async (req, res) => {
+        const user = await User.findOne({ email: req.body.loginEmail });
+        if (!user) return res.redirect("/signup")
 
-    const validUser = await bcrypt.compare(req.body.loginPassword, user.password)
-    //console.log(validUser)
-    if (!validUser) return res.redirect("/login")
-    else {
+        const validUser = await bcrypt.compare(req.body.loginPassword, user.password)
+        //console.log(validUser)
+        if (!validUser) return res.redirect("/login")
+
         jwt.sign({ user }, "secretkey", (err, token) => {
+            if (err) res.redirect("/login")
+            //console.log(token)
+            if (token) {
+                //Use localstorage
+                //console.log("hej")
+                // const cookie = req.cookies.jwtToken;
+                const cookie = req.cookies.jsonwebtoken;
+                if (!cookie) {
 
-            if (err) return res.redirect("/login")
-           if (!req.cookies) {
-                res.cookie("jsonwebtoken", token, { maxAge: 3600000, httpOnly: true })
+                    //res.header("auth")
+                    res.cookie('jsonwebtoken', token, { maxAge: 3600000, httpOnly: true });
+                }
 
-            } 
-            //exp.
-            //node js kör i servern och localStorage är Browser api
-            //localStorage.setItem("JSONWEBTOKEN", JSON.stringify(token))
+                res.render("userProfile", { user })
+            }
+            res.redirect("/login")
 
-            res.render("userProfile", { user })
         })
-    }
+
+
+    })
+
+
+router.get("/products", verifyToken , (req, res)=>{
+
+res.send("You have authorisation");
 })
 
 
