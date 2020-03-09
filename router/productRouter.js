@@ -12,7 +12,7 @@ router.get("/products", async (req, res) => {
 
     const product_per_page = 4;
 
-    const page = req.query.page;
+    const page = +req.query.page;  //Number(req.query.page)
 
 const countProduct = await Product.find().countDocuments(); 
 
@@ -33,15 +33,15 @@ console.log(countProduct);
      //current Page 
      currentPage:page, 
      //hasNextPage
-      hasNextPage: product_per_page> page*product_per_page, 
+      hasNextPage: product_per_page > product_per_page *page, 
       
        //hasPreviousPage 
         hasPreviousPage: page>1, 
-         
+          nextPage:page +1,
+         previousPage: page-1 ,
          //lastPage
-         lastPage: Math.ceil(countProduct/product_per_page), 
-         nextPage:page +1,
-         previousPage: page-1  
+         lastPage: Math.ceil(countProduct/product_per_page) 
+        
 
      })
 })
