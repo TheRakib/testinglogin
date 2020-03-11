@@ -4,30 +4,25 @@
     <% products.forEach( product=> { %>
   
           <li> <%= product %></li>
+
+          
        
   <%  }) %>
-<% if(products.length >=1 )  { %>
-  <div class="pagination">
-     <% if(currentPage !==1  && previousPage !==1) {  %>
-     <a href="/products/?page=<%=page=1 %>">1</a>
-     <% } %>
-
-<% if(hasPreviousPage) { %>
-     <a href="/products/?page=<%=previousPage%>"> <%=previousPage %> </a>
-     <%} %>
-<a href="/products/?page=<%=currentPage%>"> <%=currentPage %> </a>   
-     <% if(hasNextPage) {  %> 
-      <a href="/products/?page=<%=nextPage%>"> <%=nextPage %></a>
-      <% } %>   
-    <!--   <% if(currentPage) {  %> -->
-          
-       <!--  <%   } %> -->
   
-        <% if(lastPage !== currentPage && nextPage !== lastPage) {  %>
-         <a href="/products/?page=<%=lastPage%>"> <%=lastPage %></a>
-       <% } %>
 
-  </div>
-  <% } %>
- 
+</div>
+
+<div>
+   <%var counter = 1 %>
+      <% for(var i= product_per_page; i< countProduct; i+=product_per_page) { %>
+        
+          <a href="/products/?page=<%=counter%>"><%=counter%></a>
+         <%
+          counter++;
+           %>
+
+        <%  } %>
+
+
+
 </div>

@@ -4,11 +4,11 @@ module.exports = (req, res, next)=>{
 
 
        const token = req.cookies.jsonwebtoken;
-       console.log( "token" , token);
+      // console.log( "token" , token);
   if(token) {
       //decode token och user info
     const user = jwt.verify(token, "secretkey")
-    console.log("user info" , user);
+    
     req.user = user;
     next();
   }

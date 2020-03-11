@@ -30,6 +30,7 @@ console.log(countProduct);
     res.render("product.ejs", { products,
     //totaltProdukt
      countProduct, 
+     product_per_page,
      //current Page 
      currentPage:page, 
      //hasNextPage
