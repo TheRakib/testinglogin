@@ -3,16 +3,16 @@ const User = require("../model/user")
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
 const verifyToken = require("./verifyToken");
-const config = require("../config/config");  
+const config = require("../config/config");
 const nodemailer = require("nodemailer");
 const sendGridTransport = require("nodemailer-sendgrid-transport")
-
+const crypto = require("crypto");
 const router = express.Router();
 
 
 const transport = nodemailer.createTransport(sendGridTransport({
     auth: {
-        api_key:config.mail
+        api_key: config.mail
     }
 }))
 router.get("/signUp", (req, res) => {
@@ -23,17 +23,19 @@ router.post("/signUp", async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(req.body.password, salt);
     //console.log(hashPassword)
-    const user =await new User({
+    const user = await new User({
         email: req.body.email,
         password: hashPassword
     }).save();
-transport.sendMail({
-    to: "rraakkiibb@gmail.com",
-    from:"<no-reply>Medieintstitutet@frontendare.se", 
-    subject:"Login succeeded", 
-    html:"<h1> Väkommen " + user.email + "</h1>"
+    //user.save()
+    console.log(user)
+    transport.sendMail({
+        to: user.email,
+        from: "<no-reply>Medieintstitutet@frontendare.se",
+        subject: "Login succeeded",
+        html: "<h1> Väkommen " + user.email + "</h1>"
 
-})
+    })
 
     //const user = await User.findOne({email:req.body.email});
     //console.log(user)
@@ -93,28 +95,57 @@ router.route("/login")
     })
 
 
-router.get("/reset", (req, res)=>{
+router.get("/reset", (req, res) => {
     res.render("reset")
 })
-router.post("/reset", async (req, res)=>{
+router.post("/reset", async (req, res) => {
 
-   // req.body.resetMail
- const existUser = await User.findOne({email:req.body.resetMail})
- if(!existUser) return res.redirect("/signup");
+    // req.body.resetMail
+    const user = await User.findOne({ email: req.body.resetMail })
+    if (!user) return res.redirect("/signup");
 
-  existUser.resetToken = "en reset token"
-  existUser.expirationToken = Date.now() + 100000;
+    crypto.randomBytes(32, async (err, token) => {
+        if (err) return res.redirect("/signup");
+        const resetToken = token.toString("hex");
+        //"ef945...""  (0-f)  
+        user.resetToken = resetToken;
+        user.expirationToken = Date.now() + 100000;
+        await user.save();
 
+        await transport.sendMail({
+            to: user.email,
+            from: "<no-reply>Medieintstitutet@frontendare.se",
+            subject: "reset  password",
+            html: ` <h1> Reset password link:  http://localhost:8002/reset/${resetToken} </h1>`
+            //http://localhost:8000/reset/resettoken
+        })
+
+        res.redirect("/login")
+ })
+})
+router.get("/reset/:token", async (req, res) => {
+    // om användare har token 
+    //och den token är giltig då kan användare kan få ett förmulär 
+    //req.params.token
+    const user = await User.findOne({ resetToken: req.params.token, expirationToken: { $gt: Date.now() } })
+
+    if (!user) return res.redirect("/signUp");
 
 })
+//const nodemailer = require("nodemailer");
+//const sendGridTransport = require("nodemailer-sendgrid-transport")
 
-router.get("/products", verifyToken , (req, res)=>{
 
-res.send("You have authorisation");
+
+
+
+router.get("/products", verifyToken, (req, res) => {
+
+    res.send("You have authorisation");
 })
 
-router.get("/logout", (req, res)=>{
-        res.clearCookie("jsonwebtoken").redirect("/login")
+router.get("/logout", (req, res) => {
+    res.clearCookie("jsonwebtoken").redirect("/login")
 })
 
 
