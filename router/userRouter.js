@@ -43,23 +43,13 @@ router.post("/signUp", async (req, res) => {
     res.send("You have been registered")
 })
 
-
-
 router.route("/login")
 
     .get((req, res) => {
-
-
-
         //användarens info
         res.render("login.ejs")
         // jämföra med databas info.
-
-
-
     })
-
-
 
     .post(async (req, res) => {
         const user = await User.findOne({ email: req.body.loginEmail });
@@ -131,16 +121,30 @@ router.get("/reset/:token", async (req, res) => {
 
     if (!user) return res.redirect("/signUp");
 
+    res.render("resetForm.ejs" , {user})
+
 })
 //const nodemailer = require("nodemailer");
 //const sendGridTransport = require("nodemailer-sendgrid-transport")
 
+router.post("/reset/:token", async(req, res)=>{
+    //req.body.userId
+    //req.body.password
 
+    const user = await User.findOne({_id:req.body.userId})
 
+    user.password = await bcrypt.hash(req.body.password, 10) ;
+    user.resetToken= undefined;
+    user.expirationToken= undefined;
+                await user.save();
 
+res.redirect("/login"); 
+//aws ses
+})
 
 router.get("/products", verifyToken, (req, res) => {
 
+  
     res.send("You have authorisation");
 })
 
