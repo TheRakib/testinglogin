@@ -9,7 +9,7 @@ module.exports = (req, res, next)=>{
       //decode token och user info
     const user = jwt.verify(token, "secretkey")
     
-    req.user = user;
+    req.body = user;
     next();
   }
   else{

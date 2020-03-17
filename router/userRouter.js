@@ -149,17 +149,17 @@ router.get("/logout", (req, res) => {
     res.clearCookie("jsonwebtoken").redirect("/login")
 })
 
-router.get("/wishlist/:id", async (req, res)=>{
+router.get("/wishlist/:id",verifyToken , async (req, res)=>{
   
        //req.params.id
 
     const product =  await  Product.findOne({_id:req.params.id})
      
-    
-     //req.body 
+   // req.user ska ha user inf
+     //req.body.user._id
      //verifyToken
        
-       //hård kodat
+       //hård kodat user id från user collection
      const user = await User.findOne({_id:"5e60c88c682e555cc4007298"})
      //user hämtar bara ett objekt. 
      //User.find() hämtar array of object 

@@ -50,12 +50,15 @@ console.log("products ", products)
      }) 
 })
 
-router.get("/createProduct", async (req, res) => {
+router.get("/createProduct", verifyToken, async (req, res) => {
+ 
+ console.log("Request body ", req.body.user._id)
+ 
   const product=  await new Product({
         name: "Tesla",
         price: 10000000,
         description: "lite kort beskrivning om product", 
-        user: "5e60c88c682e555cc4007298"
+        user: req.body.user._id //req.body.user._id
          // user:
     
       
