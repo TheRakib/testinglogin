@@ -8,6 +8,7 @@ const nodemailer = require("nodemailer");
 const sendGridTransport = require("nodemailer-sendgrid-transport")
 const crypto = require("crypto");
 const router = express.Router();
+const Product = require("../model/product")
 
 
 const transport = nodemailer.createTransport(sendGridTransport({
@@ -96,6 +97,7 @@ router.post("/reset", async (req, res) => {
 
     crypto.randomBytes(32, async (err, token) => {
         if (err) return res.redirect("/signup");
+        //12131231
         const resetToken = token.toString("hex");
         //"ef945...""  (0-f)  
         user.resetToken = resetToken;
@@ -106,7 +108,7 @@ router.post("/reset", async (req, res) => {
             to: user.email,
             from: "<no-reply>Medieintstitutet@frontendare.se",
             subject: "reset  password",
-            html: ` <h1> Reset password link:  http://localhost:8002/reset/${resetToken} </h1>`
+            html: `  Reset password link:  http://localhost:8002/reset/${resetToken} `
             //http://localhost:8000/reset/resettoken
         })
 
@@ -136,17 +138,12 @@ router.post("/reset/:token", async(req, res)=>{
     user.password = await bcrypt.hash(req.body.password, 10) ;
     user.resetToken= undefined;
     user.expirationToken= undefined;
-                await user.save();
+     await user.save();
 
 res.redirect("/login"); 
 //aws ses
 })
 
-router.get("/products", verifyToken, (req, res) => {
-
-  
-    res.send("You have authorisation");
-})
 
 router.get("/logout", (req, res) => {
     res.clearCookie("jsonwebtoken").redirect("/login")

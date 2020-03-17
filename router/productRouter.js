@@ -24,9 +24,12 @@ console.log(countProduct);
     // localhost:8000/products/?page=1
 
     const products = await Product.find()
+       
         .skip(product_per_page * (page-1))
         .limit(product_per_page)
 
+
+console.log("products", products)
     res.render("product.ejs", { products,
     //totaltProdukt
      countProduct, 
@@ -48,12 +51,17 @@ console.log(countProduct);
 })
 
 router.get("/createProduct", async (req, res) => {
-    await new Product({
+  const product=  await new Product({
         name: "Adidas",
         price: 1000,
-        description: "lite kort beskrivning om product"
-    }).save();
+        description: "lite kort beskrivning om product", 
+       // user:"5e60c88c682e555cc4007298"
+    
+      
+    }).save()
 
+    
+console.log(product)
     //res.redirect("/products")
     res.send("product is created")
 })
