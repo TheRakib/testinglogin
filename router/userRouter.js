@@ -120,7 +120,7 @@ router.get("/reset/:token", async (req, res) => {
     //och den token är giltig då kan användare kan få ett förmulär 
     //req.params.token
     const user = await User.findOne({ resetToken: req.params.token, expirationToken: { $gt: Date.now() } })
-
+     console.log(user);
     if (!user) return res.redirect("/signUp");
 
     res.render("resetForm.ejs" , {user})
@@ -149,6 +149,37 @@ router.get("/logout", (req, res) => {
     res.clearCookie("jsonwebtoken").redirect("/login")
 })
 
+router.get("/wishlist/:id", async (req, res)=>{
+  
+       //req.params.id
+
+    const product =  await  Product.findOne({_id:req.params.id})
+     
+    
+     //req.body 
+     //verifyToken
+       
+       //hård kodat
+     const user = await User.findOne({_id:"5e60c88c682e555cc4007298"})
+     //user hämtar bara ett objekt. 
+     //User.find() hämtar array of object 
+
+     await user.addToWishList(product)
+
+   // await user.save()
+    console.log(user)
+
+res.send("wishlisted");
+
+})
+/* <div>
+    <% products.forEach( product=> { %>
+  
+          <li> <%= product %></li>
+
+          <a href="/wishlist/<%=product._id %>"> Add to Wishlist</a>
+       
+  <%  }) %> */
 
 
 module.exports = router;

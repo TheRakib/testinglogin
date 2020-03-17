@@ -23,14 +23,14 @@ console.log(countProduct);
 
     // localhost:8000/products/?page=1
 
-    const products = await Product.find()
+    const products = await Product.find().populate("user -password")
        
         .skip(product_per_page * (page-1))
-        .limit(product_per_page)
+        .limit(product_per_page) 
 
-
-console.log("products", products)
-    res.render("product.ejs", { products,
+console.log("products ", products)
+//res.send("product has shown")
+     res.render("product.ejs", { products,
     //totaltProdukt
      countProduct, 
      product_per_page,
@@ -47,15 +47,16 @@ console.log("products", products)
          lastPage: Math.ceil(countProduct/product_per_page) 
         
 
-     })
+     }) 
 })
 
 router.get("/createProduct", async (req, res) => {
   const product=  await new Product({
-        name: "Adidas",
-        price: 1000,
+        name: "Tesla",
+        price: 10000000,
         description: "lite kort beskrivning om product", 
-       // user:"5e60c88c682e555cc4007298"
+        user: "5e60c88c682e555cc4007298"
+         // user:
     
       
     }).save()
