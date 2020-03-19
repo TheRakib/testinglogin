@@ -20,8 +20,9 @@ userSchema.methods.addToWishList = function(product){
     this.wishlist.push({productId: product._id})
     return this.save();
 }
+//user.addToWishList(product)
 
-//userSchema.me
+//sigle responsibility 
 
 
  

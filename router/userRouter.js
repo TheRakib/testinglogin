@@ -153,25 +153,39 @@ router.get("/wishlist/:id",verifyToken , async (req, res)=>{
   
        //req.params.id
 
-    const product =  await  Product.findOne({_id:req.params.id})
-     
+    const product =  await  Product.findOne({_id:req.params.id}).populate("user")
+      
+      // {}
+
+   //console.log("product with user population" , product)
+
    // req.user ska ha user inf
      //req.body.user._id
      //verifyToken
        
        //hård kodat user id från user collection
-     const user = await User.findOne({_id:"5e60c88c682e555cc4007298"})
+    const user = await User.findOne({_id: req.body.user._id}).populate("wishlist.productId")
      //user hämtar bara ett objekt. 
      //User.find() hämtar array of object 
+   console.log(user)
+    // req.body.user.addToWishList(product)
 
-     await user.addToWishList(product)
+// mata in ett product id från mongo databas  . Lägg den som string  "51232131231......."
+ await user.addToWishList(product)
 
-   // await user.save()
-    console.log(user)
+ //populate user with product model.
+ //console.log("added" ,user)
+ 
+  
 
-res.send("wishlisted");
+res.render("wishlist.ejs", {user});
 
 })
+
+
+
+
+
 /* <div>
     <% products.forEach( product=> { %>
   
