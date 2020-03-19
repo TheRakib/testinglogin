@@ -149,48 +149,29 @@ router.get("/logout", (req, res) => {
     res.clearCookie("jsonwebtoken").redirect("/login")
 })
 
-router.get("/wishlist/:id",verifyToken , async (req, res)=>{
+router.get("/wishlist",verifyToken , async (req, res)=>{
   
-       //req.params.id
-
-    const product =  await  Product.findOne({_id:req.params.id}).populate("user")
-      
-      // {}
-
-   //console.log("product with user population" , product)
-
-   // req.user ska ha user inf
-     //req.body.user._id
-     //verifyToken
-       
-       //hård kodat user id från user collection
-    const user = await User.findOne({_id: req.body.user._id}).populate("wishlist.productId")
-     //user hämtar bara ett objekt. 
-     //User.find() hämtar array of object 
-   //console.log(user)
-    // req.body.user.addToWishList(product)
-
-// mata in ett product id från mongo databas  . Lägg den som string  "51232131231......."
- await user.addToWishList(product)
-
- //populate user with product model.
- //console.log("added" ,user)
- 
-  
-
+ const user = await User.findOne({_id: req.body.user._id}).populate("wishlist.productId")
 res.render("wishlist.ejs", {user});
 
 })
 
 
-router.get("/deleteWishlist/:id", (req, res)=>{
+router.get("/wishlist/:id",verifyToken , async (req, res)=>{
+ const product =  await  Product.findOne({_id:req.params.id}) 
+const user = await User.findOne({_id: req.body.user._id})   
+// mata in ett product id från mongo databas  . Lägg den som string  "51232131231......."
+ await user.addToWishList(product)
+ console.log("wishlist user " , user)
+ res.redirect("/wishlist")
+//res.render("wishlist.ejs", {user});
 
-   //req.params.id
+})
 
-   res.redirect("/wishlist/:id")
-
-
-
+router.get("/deleteWishlist/:id", verifyToken, async(req, res)=>{
+  const user = await User.findOne({_id: req.body.user._id})
+  user.removeFromList(req.params.id)
+  res.redirect("/wishlist");
 })
 
 
