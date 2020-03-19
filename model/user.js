@@ -13,6 +13,7 @@ const userSchema = new Schema({
         }
     }]  
 })
+//sigle responsibility principer
 
 //när vi ska anropa addToWishList(product). Vi ska anropa i userRouter där vi skapar en wishlist route.
 //product kommer från product modellen. 
@@ -22,7 +23,28 @@ userSchema.methods.addToWishList = function(product){
 }
 //user.addToWishList(product)
 
-//sigle responsibility 
+userSchema.methods.remove = function(productId){
+   //splice metod 
+   //filter 
+    
+   /* const restOftheProducts=  this.wishlist.filter( function (product){
+            this.wishlist.productId.toString() != productId.toString()
+    })
+
+    this.wishlist = restOftheProducts; */
+  
+// vilken index som productId har 
+ // vi tar bort produkten från wishlist array
+
+   const indexOfProductId = this.wishlist.indexOf(productId)
+   console.log(indexOfProductId)
+   this.wishlist.splice(indexOfProductId, 1)
+
+
+    return this.save();
+}
+
+
 
 
  

@@ -1,4 +1,14 @@
-
 <li>
-    <%= user.wishlist[0].productId.name %>
+    <% user.wishlist.forEach( (product)=>{ %>
+
+
+   
+<li> <%= product.productId.name%>
+    <span> Price: <%=product.productId.price %> </span>
+
+</li>
+
+<a href="/deleteWishlist/<%=product.productId._id%>">Remove wishlist</a>
+
+<% } ) %>
 </li>

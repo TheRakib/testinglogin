@@ -167,7 +167,7 @@ router.get("/wishlist/:id",verifyToken , async (req, res)=>{
     const user = await User.findOne({_id: req.body.user._id}).populate("wishlist.productId")
      //user hämtar bara ett objekt. 
      //User.find() hämtar array of object 
-   console.log(user)
+   //console.log(user)
     // req.body.user.addToWishList(product)
 
 // mata in ett product id från mongo databas  . Lägg den som string  "51232131231......."
@@ -183,6 +183,15 @@ res.render("wishlist.ejs", {user});
 })
 
 
+router.get("/deleteWishlist/:id", (req, res)=>{
+
+   //req.params.id
+
+   res.redirect("/wishlist/:id")
+
+
+
+})
 
 
 
