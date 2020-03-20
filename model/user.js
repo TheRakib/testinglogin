@@ -10,7 +10,9 @@ const userSchema = new Schema({
         productId: {
             type: mongoose.Schema.Types.ObjectId,
             //mongoose.Schema.Types.ObjectId, 
-            ref: "Product"
+            ref: "Product", 
+            //unique:true
+            
         }
     }]
 })
@@ -19,22 +21,26 @@ const userSchema = new Schema({
 //när vi ska anropa addToWishList(product). Vi ska anropa i userRouter där vi skapar en wishlist route.
 //product kommer från product modellen. 
 userSchema.methods.addToWishList = function (product) {
-    /*  const restOftheProducts=  this.wishlist.filter( (product)=>{
-         return   product.productId.toString() === productId.toString()
-    })
- */
+this.wishlist.push({ productId: product._id })
+const newWishlist = this.wishlist.filter( function( {productId} ) {
+ 
+ //if(!this.add(`${productId}`)) { this.add(`${productId}`)}
+  return !this.has(`${productId}`) && this.add(`${productId}`)
+},new Set)
+console.log(newWishlist)
+//kopierar array 
+this.wishlist = [...newWishlist]
+return this.save();
 
-    //om det finns produkten redan i wishlistan ska man inte lägga till igen
-    //
-    this.wishlist.push({ productId: product._id })
-    return this.save();
+//passing by value and by reference 
+// console.log("value of wishlist" , this.wishlist) 
+//object destructuring , array destructuring 
+ 
 }
-//user.addToWishList(product)
 
 userSchema.methods.removeFromList = function (productId) {
     //splice metod 
     //filter 
-
     //console.log(productId)
     const restOftheProducts = this.wishlist.filter((product) => {
         return product.productId.toString()
@@ -53,20 +59,10 @@ userSchema.methods.removeFromList = function (productId) {
     //    this.wishlist.splice(indexOfProductId, 1)
     //   return this.save();
 
-
 }
-
-
-
-
-
 
 //hur vi ska sparar 
 //mongoose har egna metoder för att kunna spara data i modellen.
-
-
-
-
 
 const User = mongoose.model("User", userSchema);
 

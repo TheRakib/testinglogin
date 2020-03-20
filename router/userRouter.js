@@ -161,8 +161,9 @@ router.get("/wishlist/:id",verifyToken , async (req, res)=>{
  const product =  await  Product.findOne({_id:req.params.id}) 
 const user = await User.findOne({_id: req.body.user._id})   
 // mata in ett product id från mongo databas  . Lägg den som string  "51232131231......."
+//console.log("product" , product)
  await user.addToWishList(product)
- console.log("wishlist user " , user)
+ //console.log("wishlist user " , user)
  res.redirect("/wishlist")
 //res.render("wishlist.ejs", {user});
 

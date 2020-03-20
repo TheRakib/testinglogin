@@ -16,7 +16,7 @@ router.get("/products", async (req, res) => {
 
 const countProduct = await Product.find().countDocuments(); 
 
-console.log(countProduct);
+//console.log(countProduct);
 
 
 
@@ -28,7 +28,7 @@ console.log(countProduct);
         .skip(product_per_page * (page-1))
         .limit(product_per_page) 
 
-console.log("products ", products)
+//console.log("products ", products)
 //res.send("product has shown")
      res.render("product.ejs", { products,
     //totaltProdukt
@@ -52,7 +52,7 @@ console.log("products ", products)
 
 router.get("/createProduct", verifyToken, async (req, res) => {
  
- console.log("Request body ", req.body.user._id)
+ //console.log("Request body ", req.body.user._id)
  
   const product=  await new Product({
         name: "Tesla",
@@ -65,7 +65,7 @@ router.get("/createProduct", verifyToken, async (req, res) => {
     }).save()
 
     
-console.log(product)
+//console.log(product)
     //res.redirect("/products")
     res.send("product is created")
 })
