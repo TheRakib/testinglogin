@@ -28,10 +28,19 @@ const newWishlist = this.wishlist.filter( function( {productId} ) {
   return !this.has(`${productId}`) && this.add(`${productId}`)
 },new Set)
 console.log(newWishlist)
-//kopierar array 
+//kopierar array,  passing by value
 this.wishlist = [...newWishlist]
+//this.wishlist = newWishlist
 return this.save();
 
+/* Copy an array
+const arr = [1, 2, 3];
+const arr2 = [...arr]; // like arr.slice()
+
+arr2.push(4);
+//  arr2 becomes [1, 2, 3, 4]
+//  arr remains unaffected
+ */
 //passing by value and by reference 
 // console.log("value of wishlist" , this.wishlist) 
 //object destructuring , array destructuring 
@@ -67,3 +76,14 @@ userSchema.methods.removeFromList = function (productId) {
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;
+
+//env file 
+//config vs env . Skriva om config filen 
+//env sample file
+//production and test environment
+//https://www.npmjs.com/package/dotenv
+//cross env
+
+
+//https://mongoosejs.com/docs/jest.html
+//https://www.npmjs.com/package/mockgoose

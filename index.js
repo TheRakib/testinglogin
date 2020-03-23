@@ -4,9 +4,11 @@ const config = require("./config/config");
 const userRouter = require("./router/userRouter");
 const productRouter = require("./router/productRouter")
 const cookieParser = require("cookie-parser");
+require('dotenv').config()
+//const env??
 
 
-
+console.log(process.env.PORT)
 
 const app = express();
 
