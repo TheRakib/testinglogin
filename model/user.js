@@ -84,6 +84,7 @@ module.exports = User;
 //https://www.npmjs.com/package/dotenv
 //cross env
 
+// jest 
 
 //https://mongoosejs.com/docs/jest.html
 //https://www.npmjs.com/package/mockgoose

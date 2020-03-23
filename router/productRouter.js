@@ -8,6 +8,17 @@ const verifyToken = require("./verifyToken")
 //kurbernetes
 const router = express.Router();
 
+
+
+
+
+
+
+
+
+
+
+
 router.get("/products", async (req, res) => {
 
     const product_per_page = 4;
@@ -67,7 +78,7 @@ router.get("/createProduct", verifyToken, async (req, res) => {
     
 //console.log(product)
     //res.redirect("/products")
-    res.send("product is created")
+    res.send(product)
 })
 
 module.exports = router;

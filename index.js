@@ -8,7 +8,6 @@ require('dotenv').config()
 //const env??
 
 
-console.log(process.env.PORT)
 
 const app = express();
 
@@ -17,6 +16,13 @@ app.use(cookieParser())
 app.use(express.urlencoded({extended:true}))
 
 app.set("view engine", "ejs");
+
+
+app.get("/", (req, res)=>{
+
+    res.send("Välkommnar användare")
+})
+
 
 
 
@@ -32,3 +38,5 @@ const port = process.env.PORT || 8002;
 mongoose.connect(config.databaseURL, options).then(()=>{
     app.listen(port);
 })
+
+module.exports = app
