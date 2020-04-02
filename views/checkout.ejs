@@ -1,0 +1,32 @@
+
+<form action="" method="post">
+   <% user.wishlist.forEach( product=>{ %>
+
+  <div> <%=product.productId.name %></div>
+  <div> <%= product.productId.price %></div>
+  
+  <% }) %>
+
+       
+   <button id="btn" type="submit">Buy</button>
+
+</form>
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+
+    var stripe = Stripe('pk_test_6S7LMFzlqn3wbN2H3LjBAiDW00qdnGvRX1');
+    document.querySelector("#btn").addEventListener("click", ()=>{
+        stripe.redirectToCheckout({
+            sessionId: "<%=sessionId%>"
+        })
+    })
+</script>
+
+
+
+//http://randomiban.com/?country=Sweden
+//https://stripe.com/docs/js
+//https://www.npmjs.com/package/stripe 
+// session https://stripe.com/docs/api/checkout/sessions/create
+// https://stripe.com/docs/payments/checkout/fulfillment 
+// https://dashboard.stripe.com/payments/pi_1GSQAGEC29gkvsD4bp5jNi4t

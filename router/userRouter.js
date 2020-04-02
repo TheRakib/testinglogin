@@ -8,7 +8,12 @@ const nodemailer = require("nodemailer");
 const sendGridTransport = require("nodemailer-sendgrid-transport")
 const crypto = require("crypto");
 const router = express.Router();
-const Product = require("../model/product")
+const Product = require("../model/product");
+//require dotenv
+//process.env.STRIPE_KEY
+//npm i stripe --save
+const stripe =require("stripe")("sk_test_8rmpp0nPtS8mc1ovYHPengwi00tRWejSio")
+
 
 
 const transport = nodemailer.createTransport(sendGridTransport({
@@ -176,8 +181,43 @@ router.get("/deleteWishlist/:id", verifyToken, async(req, res)=>{
 })
 
 
+router.get("/order", verifyToken,async (req, res)=>{
+ const user = await User.findOne({_id: req.body.user._id}).populate("wishlist.productId")
+ 
+ return stripe.checkout.sessions.create({
+     payment_method_types: ["card"],
+     line_items: user.wishlist.map((product)=>{
+         return {
+             name: product.productId.name,
+             amount:product.productId.price*100, //öre *100 = 1 kronor
+             quantity: 1, 
+             currency:"sek"
+         }
+     }),
+     success_url:req.protocol +   "://" + req.get("Host") +  "/",
+     cancel_url:"http://localhost:8002/products"
+     // ":" + process.env.PORT + 
+
+ }).then( (session)=>{
+     console.log(session)
+ res.render("checkout.ejs", {user, sessionId:session.id})
+ })
+
+//// req.protocol + :// + req.get("Host") +"/"
+  
+  //skicka en session id från här .
+  
+
+})
+
+//forEach() — executes a provided function once for each array element.
+//map() — creates a new array with the results of calling a provided function on every element in the calling array.
 
 /* <div>
+
+checkout sidan:  <%= user.wishlist[0].productId.name %>
+
+  
     <% products.forEach( product=> { %>
   
           <li> <%= product %></li>

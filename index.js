@@ -4,7 +4,7 @@ const config = require("./config/config");
 const userRouter = require("./router/userRouter");
 const productRouter = require("./router/productRouter")
 const cookieParser = require("cookie-parser");
-//require('dotenv').config()
+require('dotenv').config()
 //const env??
 
 
